@@ -1,0 +1,38 @@
+[build-system]
+requires = ["flit_core >=3.2, <4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "funcy_chain"
+home-page = "https://github.com/taleinat/funcy_chain"
+authors = [{name = "Tal Einat", email = "taleinat@gmail.com"}]
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires-python = ">=3.5"
+dynamic = ["version", "description"]
+dependencies = [
+    "funcy",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest >=2.7.3",
+    "tox >=3, <4",
+]
+dev = [
+    "flit >=3.3, <4",
+]
+lint = [
+    "black",
+    "isort",
+    "pylint",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py36', 'py37', 'py38', 'py39']
+include = '\.pyi?$'
+
+[tool.isort]
+line_length = 100
+multi_line_output = 3
+profile = "black"
