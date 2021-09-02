@@ -37,10 +37,10 @@ class FuncyChain(ChainBase):
     ## heapq
 
     def nlargest(self, n, key=None):
-        return FuncyChain(nlargest(n, self._value, key=key))
+        return FuncyChain(nlargest(n, self._value, key=make_func(key, builtin=True)))
 
     def nsmallest(self, n, key=None):
-        return FuncyChain(nsmallest(n, self._value, key=key))
+        return FuncyChain(nsmallest(n, self._value, key=make_func(key, builtin=True)))
 
     ## random
 
