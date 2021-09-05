@@ -3,16 +3,14 @@ import warnings
 
 import pytest
 
-from funcy_chain import Chain
 
-
-def test_choice():
+def test_choice(Chain):
     assert Chain([1, 2, 3]).choice().value in [1, 2, 3]
     with pytest.raises(IndexError):
         Chain([]).choice().value
 
 
-def test_choices():
+def test_choices(Chain):
     assert Chain([1, 2, 3]).choices(k=1).value in [[1], [2], [3]]
     assert len(Chain([1, 2, 3]).choices(k=4).value) == 4
     assert len(Chain([1, 2, 3]).choices([1, 2, 3], k=4).value) == 4
@@ -22,7 +20,7 @@ def test_choices():
         Chain([]).choices(k=1).value
 
 
-def test_sample():
+def test_sample(Chain):
     assert Chain([1, 2, 3]).sample(1).value in [[1], [2], [3]]
     assert len(Chain([1, 2, 3]).sample(2).value) == 2
     assert len(Chain([1, 2, 3]).sample(3).value) == 3
@@ -38,7 +36,7 @@ def test_sample():
             Chain([1, 2, 3]).sample(10, counts=[3, 3, 3]).value
 
 
-def test_shuffle():
+def test_shuffle(Chain):
     assert Chain([]).shuffle().value == []
     assert Chain([1, 2, 3]).shuffle().sort().value == [1, 2, 3]
 

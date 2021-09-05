@@ -1,9 +1,7 @@
 import pytest
 
-from funcy_chain import Chain
 
-
-def test_items():
+def test_items(Chain):
     assert Chain({}).items().value == []
     assert Chain({1: 2}).items().value == [(1, 2)]
 
@@ -11,7 +9,7 @@ def test_items():
         assert Chain([]).items().value
 
 
-def test_keys():
+def test_keys(Chain):
     assert Chain({}).keys().value == []
     assert Chain({1: 2}).keys().value == [1]
 
@@ -19,7 +17,7 @@ def test_keys():
         assert Chain([]).keys().value
 
 
-def test_values():
+def test_values(Chain):
     assert Chain({}).values().value == []
     assert Chain({1: 2}).values().value == [2]
 
@@ -27,7 +25,7 @@ def test_values():
         assert Chain([]).values().value
 
 
-def test_update():
+def test_update(Chain):
     assert Chain({}).update().value == {}
     assert Chain({}).update({"b": 2}).value == {"b": 2}
     assert Chain({}).update([("b", 2)]).value == {"b": 2}
