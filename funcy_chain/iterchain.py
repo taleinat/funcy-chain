@@ -26,7 +26,9 @@ class IterChain(ChainBase):
         return IterChain(min(self._value, key=make_func(key, builtin=MIN_MAX_KEY_ACCEPTS_NONE)))
 
     def reduce(self, f, *initializer):
-        return IterChain(functools.reduce(make_func(make_func(f), builtin=True), self._value, *initializer))
+        return IterChain(
+            functools.reduce(make_func(make_func(f), builtin=True), self._value, *initializer)
+        )
 
     def reverse(self):
         try:

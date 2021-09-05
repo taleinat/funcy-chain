@@ -2,7 +2,6 @@ from collections.abc import Mapping, Set
 from functools import reduce
 from operator import itemgetter
 
-
 __all__ = [
     "UNSET",
     "UnsetType",
@@ -24,8 +23,7 @@ def make_func(f, builtin=False, test=False):
         return f
     elif f is None:
         # pass None to builtin as predicate or mapping function for speed
-        return None if builtin else \
-               bool if test else lambda x: x
+        return None if builtin else bool if test else lambda x: x
     elif isinstance(f, (int, slice, str)):
         return itemgetter(f)
     elif isinstance(f, list):

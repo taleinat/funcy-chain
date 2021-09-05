@@ -1,7 +1,8 @@
-from funcy_chain import IterChain
 from test.conftest import IterChainWrapper
 
 import pytest
+
+from funcy_chain import IterChain
 
 
 def test_join(Chain):

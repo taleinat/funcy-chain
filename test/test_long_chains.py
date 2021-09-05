@@ -32,13 +32,9 @@ def test_youngest(Chain):
     users = [
         {"user": "barney", "age": 36},
         {"user": "fred", "age": 40},
-        {"user": "pebbles", "age": 1}
+        {"user": "pebbles", "age": 1},
     ]
-    assert (
-        Chain(users)
-        .sort("age")
-        .map("user")
-    ).value == ["pebbles", "barney", "fred"]
+    assert (Chain(users).sort("age").map("user")).value == ["pebbles", "barney", "fred"]
 
 
 def test_long_path(Chain):

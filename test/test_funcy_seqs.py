@@ -1,5 +1,6 @@
-from funcy_chain import IterChain
 from test.conftest import IterChainWrapper
+
+from funcy_chain import IterChain
 
 
 def test_drop(Chain):
@@ -125,6 +126,7 @@ def test_distinct(Chain):
 def test_split(Chain):
     if issubclass(Chain, IterChainWrapper):
         Chain = IterChain
+
     def unlazy(chain_value):
         return tuple(map(list, chain_value))
 
@@ -136,6 +138,7 @@ def test_split(Chain):
 def test_split_at(Chain):
     if issubclass(Chain, IterChainWrapper):
         Chain = IterChain
+
     def unlazy(chain_value):
         return tuple(map(list, chain_value))
 
@@ -149,6 +152,7 @@ def test_split_at(Chain):
 def test_split_by(Chain):
     if issubclass(Chain, IterChainWrapper):
         Chain = IterChain
+
     def unlazy(chain_value):
         return tuple(map(list, chain_value))
 
@@ -209,6 +213,7 @@ def test_chunks(Chain):
 def test_partition_by(Chain):
     if issubclass(Chain, IterChainWrapper):
         Chain = IterChain
+
     def unlazy(chain_value):
         return list(map(list, chain_value))
 
