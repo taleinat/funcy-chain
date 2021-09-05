@@ -2,10 +2,9 @@
 
 Method chaining with [funcy](https://github.com/Suor/funcy).
 
-```python3
+```pycon
 >>> from funcy_chain import Chain
->>> (
-...     Chain([1, 2, 3, 7, 6, 5, 4])
+>>> (Chain([1, 2, 3, 7, 6, 5, 4])
 ...     .without(3)
 ...     .filter(lambda x: x > 2)
 ...     .remove(lambda x: x > 6)
@@ -14,17 +13,17 @@ Method chaining with [funcy](https://github.com/Suor/funcy).
 [6, 5, 4]
 ```
 
-```python3
-users = [
-  { 'user': 'barney',  'age': 36 },
-  { 'user': 'fred',    'age': 40 },
-  { 'user': 'pebbles', 'age': 1 }
-]
-
-youngest = (
-    Chain(users)
-    .sort(key="age")
-    
+```pycon
+>>> users = [
+...   { 'user': 'barney',  'age': 36 },
+...   { 'user': 'fred',    'age': 40 },
+...   { 'user': 'pebbles', 'age': 1 }
+... ]
+>>> (Chain(users)
+...     .sort("age")
+...     .map("user")
+... ).value
+['pebbles', 'barney', 'fred']
 ```
 
 ## Why?

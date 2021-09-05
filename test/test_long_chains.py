@@ -26,3 +26,16 @@ def test_integers(Chain):
         .remove(lambda x: x > 6)
         .sort(reverse=True)
     ).value == [6, 5, 4]
+
+
+def test_youngest(Chain):
+    users = [
+        {"user": "barney", "age": 36},
+        {"user": "fred", "age": 40},
+        {"user": "pebbles", "age": 1}
+    ]
+    assert (
+        Chain(users)
+        .sort("age")
+        .map("user")
+    ).value == ["pebbles", "barney", "fred"]

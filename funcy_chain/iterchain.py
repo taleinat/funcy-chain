@@ -5,10 +5,9 @@ from itertools import islice
 from random import choice, choices, sample, shuffle
 
 import funcy
-from funcy.funcmakers import make_func
 
 from .chain_base import ChainBase
-from .utils import UNSET
+from .utils import UNSET, make_func
 
 MIN_MAX_KEY_ACCEPTS_NONE = sys.version_info >= (3, 8)
 
@@ -27,7 +26,7 @@ class IterChain(ChainBase):
         return IterChain(min(self._value, key=make_func(key, builtin=MIN_MAX_KEY_ACCEPTS_NONE)))
 
     def reduce(self, f, *initializer):
-        return IterChain(functools.reduce(make_func(f, builtin=True), self._value, *initializer))
+        return IterChain(functools.reduce(make_func(make_func(f), builtin=True), self._value, *initializer))
 
     def reverse(self):
         try:
@@ -102,27 +101,27 @@ class IterChain(ChainBase):
     merge = join
 
     def join_with(self, f):
-        return IterChain(funcy.join_with(f, self._value))
+        return IterChain(funcy.join_with(make_func(f), self._value))
 
     merge_with = join_with
 
     def walk(self, f):
-        return IterChain(funcy.walk(f, self._value))
+        return IterChain(funcy.walk(make_func(f), self._value))
 
     def walk_keys(self, f):
-        return IterChain(funcy.walk_keys(f, self._value))
+        return IterChain(funcy.walk_keys(make_func(f), self._value))
 
     def walk_values(self, f):
-        return IterChain(funcy.walk_values(f, self._value))
+        return IterChain(funcy.walk_values(make_func(f), self._value))
 
     def select(self, f):
-        return IterChain(funcy.select(f, self._value))
+        return IterChain(funcy.select(make_func(f), self._value))
 
     def select_keys(self, f):
-        return IterChain(funcy.select_keys(f, self._value))
+        return IterChain(funcy.select_keys(make_func(f), self._value))
 
     def select_values(self, f):
-        return IterChain(funcy.select_values(f, self._value))
+        return IterChain(funcy.select_values(make_func(f), self._value))
 
     def compact(self):
         return IterChain(funcy.compact(self._value))
@@ -175,19 +174,21 @@ class IterChain(ChainBase):
         return IterChain(funcy.butlast(self._value))
 
     def map(self, f):
-        return IterChain(funcy.map(f, self._value))
+        return IterChain(funcy.map(make_func(f), self._value))
 
     def filter(self, predicate):
+        predicate = make_func(predicate, test=True)
         return IterChain(funcy.filter(predicate, self._value))
 
-    def remove(self, pred):
-        return IterChain(funcy.remove(pred, self._value))
+    def remove(self, predicate):
+        predicate = make_func(predicate, test=True)
+        return IterChain(funcy.remove(predicate, self._value))
 
     def keep(self, f=UNSET):
         if f is UNSET:
             return IterChain(funcy.keep(self._value))
         else:
-            return IterChain(funcy.keep(f, self._value))
+            return IterChain(funcy.keep(make_func(f), self._value))
 
     def without(self, *items):
         return IterChain(funcy.without(self._value, *items))
@@ -200,7 +201,7 @@ class IterChain(ChainBase):
         return IterChain(funcy.flatten(self._value, **kwargs))
 
     def mapcat(self, f):
-        return IterChain(funcy.mapcat(f, self._value))
+        return IterChain(funcy.mapcat(make_func(f), self._value))
 
     def interleave(self):
         return IterChain(funcy.interleave(*self._value))
@@ -234,16 +235,16 @@ class IterChain(ChainBase):
         return IterChain(funcy.split_by(pred, self._value))
 
     def group_by(self, f):
-        return IterChain(funcy.group_by(f, self._value))
+        return IterChain(funcy.group_by(make_func(f), self._value))
 
     def group_by_keys(self, get_keys):
-        return IterChain(funcy.group_by_keys(get_keys, self._value))
+        return IterChain(funcy.group_by_keys(make_func(get_keys), self._value))
 
     def group_values(self):
         return IterChain(funcy.group_values(self._value))
 
     def count_by(self, f):
-        return IterChain(funcy.count_by(f, self._value))
+        return IterChain(funcy.count_by(make_func(f), self._value))
 
     def count_reps(self):
         return IterChain(funcy.count_reps(self._value))
@@ -261,7 +262,7 @@ class IterChain(ChainBase):
             return IterChain(funcy.chunks(n, step, self._value))
 
     def partition_by(self, f):
-        return IterChain(funcy.partition_by(f, self._value))
+        return IterChain(funcy.partition_by(make_func(f), self._value))
 
     def with_prev(self, fill=None):
         return IterChain(funcy.with_prev(self._value, fill=fill))
@@ -278,7 +279,7 @@ class IterChain(ChainBase):
 
     def reductions(self, f, acc=UNSET):
         kwargs = dict(acc=acc) if acc is not UNSET else {}
-        return IterChain(funcy.reductions(f, self._value, **kwargs))
+        return IterChain(funcy.reductions(make_func(f), self._value, **kwargs))
 
     def sums(self, acc=UNSET):
         kwargs = dict(acc=acc) if acc is not UNSET else {}

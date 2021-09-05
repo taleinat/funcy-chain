@@ -4,10 +4,9 @@ from heapq import nlargest, nsmallest
 from random import choice, choices, sample, shuffle
 
 import funcy
-from funcy.funcmakers import make_func
 
 from .chain_base import ChainBase
-from .utils import UNSET
+from .utils import UNSET, make_func
 
 MIN_MAX_KEY_ACCEPTS_NONE = sys.version_info >= (3, 8)
 
@@ -97,27 +96,27 @@ class Chain(ChainBase):
     merge = join
 
     def join_with(self, f):
-        return Chain(funcy.join_with(f, self._value))
+        return Chain(funcy.join_with(make_func(f), self._value))
 
     merge_with = join_with
 
     def walk(self, f):
-        return Chain(funcy.walk(f, self._value))
+        return Chain(funcy.walk(make_func(f), self._value))
 
     def walk_keys(self, f):
-        return Chain(funcy.walk_keys(f, self._value))
+        return Chain(funcy.walk_keys(make_func(f), self._value))
 
     def walk_values(self, f):
-        return Chain(funcy.walk_values(f, self._value))
+        return Chain(funcy.walk_values(make_func(f), self._value))
 
     def select(self, f):
-        return Chain(funcy.select(f, self._value))
+        return Chain(funcy.select(make_func(f), self._value))
 
     def select_keys(self, f):
-        return Chain(funcy.select_keys(f, self._value))
+        return Chain(funcy.select_keys(make_func(f), self._value))
 
     def select_values(self, f):
-        return Chain(funcy.select_values(f, self._value))
+        return Chain(funcy.select_values(make_func(f), self._value))
 
     def compact(self):
         return Chain(funcy.compact(self._value))
@@ -170,19 +169,19 @@ class Chain(ChainBase):
         return Chain(list(funcy.butlast(self._value)))
 
     def map(self, f):
-        return Chain(funcy.lmap(f, self._value))
+        return Chain(funcy.lmap(make_func(f), self._value))
 
     def filter(self, predicate):
-        return Chain(funcy.lfilter(predicate, self._value))
+        return Chain(funcy.lfilter(make_func(predicate, test=True), self._value))
 
-    def remove(self, pred):
-        return Chain(funcy.lremove(pred, self._value))
+    def remove(self, predicate):
+        return Chain(funcy.lremove(make_func(predicate, test=True), self._value))
 
     def keep(self, f=UNSET):
         if f is UNSET:
             return Chain(funcy.lkeep(self._value))
         else:
-            return Chain(funcy.lkeep(f, self._value))
+            return Chain(funcy.lkeep(make_func(f, test=True), self._value))
 
     def without(self, *items):
         return Chain(funcy.lwithout(self._value, *items))
@@ -195,7 +194,7 @@ class Chain(ChainBase):
         return Chain(funcy.lflatten(self._value, **kwargs))
 
     def mapcat(self, f):
-        return Chain(funcy.lmapcat(f, self._value))
+        return Chain(funcy.lmapcat(make_func(f), self._value))
 
     def interleave(self):
         return Chain(list(funcy.interleave(*self._value)))
@@ -229,16 +228,16 @@ class Chain(ChainBase):
         return Chain(funcy.lsplit_by(pred, self._value))
 
     def group_by(self, f):
-        return Chain(funcy.group_by(f, self._value))
+        return Chain(funcy.group_by(make_func(f), self._value))
 
     def group_by_keys(self, get_keys):
-        return Chain(funcy.group_by_keys(get_keys, self._value))
+        return Chain(funcy.group_by_keys(make_func(get_keys), self._value))
 
     def group_values(self):
         return Chain(funcy.group_values(self._value))
 
     def count_by(self, f):
-        return Chain(funcy.count_by(f, self._value))
+        return Chain(funcy.count_by(make_func(f), self._value))
 
     def count_reps(self):
         return Chain(funcy.count_reps(self._value))
@@ -256,7 +255,7 @@ class Chain(ChainBase):
             return Chain(funcy.lchunks(n, step, self._value))
 
     def partition_by(self, f):
-        return Chain(funcy.lpartition_by(f, self._value))
+        return Chain(funcy.lpartition_by(make_func(f), self._value))
 
     def with_prev(self, fill=None):
         return Chain(list(funcy.with_prev(self._value, fill=fill)))
@@ -268,12 +267,12 @@ class Chain(ChainBase):
         return Chain(list(funcy.pairwise(self._value)))
 
     def accumulate(self, func=UNSET):
-        kwargs = dict(func=func) if func is not UNSET else {}
+        kwargs = dict(func=make_func(func)) if func is not UNSET else {}
         return Chain(list(funcy.accumulate(self._value, **kwargs)))
 
     def reductions(self, f, acc=UNSET):
         kwargs = dict(acc=acc) if acc is not UNSET else {}
-        return Chain(funcy.lreductions(f, self._value, **kwargs))
+        return Chain(funcy.lreductions(make_func(f), self._value, **kwargs))
 
     def sums(self, acc=UNSET):
         kwargs = dict(acc=acc) if acc is not UNSET else {}
