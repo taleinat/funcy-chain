@@ -1,39 +1,39 @@
 import pytest
 
-from funcy_chain import chain
+from funcy_chain import Chain
 
 
 def test_items():
-    assert chain({}).items().value == []
-    assert chain({1: 2}).items().value == [(1, 2)]
+    assert Chain({}).items().value == []
+    assert Chain({1: 2}).items().value == [(1, 2)]
 
     with pytest.raises((AttributeError, TypeError)):
-        assert chain([]).items().value
+        assert Chain([]).items().value
 
 
 def test_keys():
-    assert chain({}).keys().value == []
-    assert chain({1: 2}).keys().value == [1]
+    assert Chain({}).keys().value == []
+    assert Chain({1: 2}).keys().value == [1]
 
     with pytest.raises((AttributeError, TypeError)):
-        assert chain([]).keys().value
+        assert Chain([]).keys().value
 
 
 def test_values():
-    assert chain({}).values().value == []
-    assert chain({1: 2}).values().value == [2]
+    assert Chain({}).values().value == []
+    assert Chain({1: 2}).values().value == [2]
 
     with pytest.raises((AttributeError, TypeError)):
-        assert chain([]).values().value
+        assert Chain([]).values().value
 
 
 def test_update():
-    assert chain({}).update().value == {}
-    assert chain({}).update({"b": 2}).value == {"b": 2}
-    assert chain({}).update([("b", 2)]).value == {"b": 2}
-    assert chain({}).update(b=2).value == {"b": 2}
-    assert chain({"a": 1}).update({"b": 2}).value == {"a": 1, "b": 2}
-    assert chain({"a": 1}).update({"a": 2}).value == {"a": 2}
+    assert Chain({}).update().value == {}
+    assert Chain({}).update({"b": 2}).value == {"b": 2}
+    assert Chain({}).update([("b", 2)]).value == {"b": 2}
+    assert Chain({}).update(b=2).value == {"b": 2}
+    assert Chain({"a": 1}).update({"b": 2}).value == {"a": 1, "b": 2}
+    assert Chain({"a": 1}).update({"a": 2}).value == {"a": 2}
 
     with pytest.raises((AttributeError, TypeError)):
-        assert chain([]).update().value
+        assert Chain([]).update().value

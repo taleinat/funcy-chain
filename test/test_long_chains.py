@@ -1,4 +1,4 @@
-from funcy_chain import chain
+from funcy_chain import Chain
 
 
 def test_names():
@@ -13,7 +13,7 @@ def test_names():
         }
     }
     names = (
-        chain(data)
+        Chain(data)
             .values()
             .map(lambda user_data: "{lastname}, {firstname}".format(**user_data))
             .sort()
@@ -23,7 +23,7 @@ def test_names():
 
 def test_integers():
     assert (
-        chain([1, 2, 3, 7, 6, 5, 4])
+        Chain([1, 2, 3, 7, 6, 5, 4])
             .without(3)
             .filter(lambda x: x > 2)
             .remove(lambda x: x > 6)

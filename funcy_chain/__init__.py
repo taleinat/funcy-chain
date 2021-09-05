@@ -3,12 +3,8 @@
 __version__ = "0.1.1"
 
 
-from .chain import FuncyChain
+from .chain import Chain
 
 __all__ = [
-    "chain",
+    "Chain",
 ]
-
-
-def chain(value):
-    return FuncyChain(value)

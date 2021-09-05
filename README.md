@@ -3,9 +3,9 @@
 Method chaining with [funcy](https://github.com/Suor/funcy).
 
 ```python3
->>> from funcy_chain import chain
+>>> from funcy_chain import Chain
 >>> (
-...     chain([1, 2, 3, 7, 6, 5, 4])
+...     Chain([1, 2, 3, 7, 6, 5, 4])
 ...     .without(3)
 ...     .filter(lambda x: x > 2)
 ...     .remove(lambda x: x > 6)
@@ -22,7 +22,7 @@ users = [
 ]
 
 youngest = (
-    chain(users)
+    Chain(users)
     .sort(key="age")
     
 ```
