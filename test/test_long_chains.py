@@ -17,6 +17,14 @@ def test_names(Chain):
     ).value
     assert names == ["Kennedy, Bob", "Liddle, Alice"]
 
+    names2 = (Chain(data)
+            .items()
+            .map(([1, "lastname"], [1, "firstname"]))
+            .sort()
+            .map(', '.join)
+            ).value
+    assert names2 == ["Kennedy, Bob", "Liddle, Alice"]
+
 
 def test_integers(Chain):
     assert (

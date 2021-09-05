@@ -28,6 +28,9 @@ def make_func(f, builtin=False, test=False):
         return itemgetter(f)
     elif isinstance(f, list):
         return lambda value: reduce(lambda obj, key: obj[key], f, value)
+    elif isinstance(f, tuple):
+        funcs = list(map(make_func, f))
+        return lambda value: tuple(func(value) for func in funcs)
     elif isinstance(f, Mapping):
         return f.__getitem__
     elif isinstance(f, Set):
