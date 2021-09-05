@@ -39,3 +39,8 @@ def test_youngest(Chain):
         .sort("age")
         .map("user")
     ).value == ["pebbles", "barney", "fred"]
+
+
+def test_long_path(Chain):
+    data = [{"a": {"b": {"c": [1, 2, {"d": [3, {1: 2}]}]}}}]
+    assert Chain(data).map(["a", "b", "c", 2, "d", 1, 1]).value == [2]

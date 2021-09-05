@@ -1,4 +1,5 @@
 from collections.abc import Mapping, Set
+from functools import reduce
 from operator import itemgetter
 
 
@@ -27,6 +28,8 @@ def make_func(f, builtin=False, test=False):
                bool if test else lambda x: x
     elif isinstance(f, (int, slice, str)):
         return itemgetter(f)
+    elif isinstance(f, list):
+        return lambda value: reduce(lambda obj, key: obj[key], f, value)
     elif isinstance(f, Mapping):
         return f.__getitem__
     elif isinstance(f, Set):
