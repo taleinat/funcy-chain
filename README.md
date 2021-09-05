@@ -6,12 +6,25 @@ Method chaining with [funcy](https://github.com/Suor/funcy).
 >>> from funcy_chain import chain
 >>> (
 ...     chain([1, 2, 3, 7, 6, 5, 4])
-...         .without(3)
-...         .filter(lambda x: x > 2)
-...         .remove(lambda x: x > 6)
-...         .sort(reverse=True)
+...     .without(3)
+...     .filter(lambda x: x > 2)
+...     .remove(lambda x: x > 6)
+...     .sort(reverse=True)
 ... ).value
 [6, 5, 4]
+```
+
+```python3
+users = [
+  { 'user': 'barney',  'age': 36 },
+  { 'user': 'fred',    'age': 40 },
+  { 'user': 'pebbles', 'age': 1 }
+]
+
+youngest = (
+    chain(users)
+    .sort(key="age")
+    
 ```
 
 ## Why?
