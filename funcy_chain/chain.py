@@ -25,14 +25,21 @@ class Chain(ChainBase):
     def min(self, key=None):
         return Chain(min(self._value, key=make_func(key, builtin=MIN_MAX_KEY_ACCEPTS_NONE)))
 
-    def sort(self, key=None, reverse=False):
-        return Chain(sorted(self._value, key=make_func(key, builtin=True), reverse=reverse))
-
     def reduce(self, f, *initializer):
         return Chain(functools.reduce(make_func(f, builtin=True), self._value, *initializer))
 
     def reverse(self):
         return Chain(list(reversed(self._value)))
+
+    def slice(self, *args):
+        return Chain(self._value.__getitem__(slice(*args)))
+
+    def sort(self, key=None, reverse=False):
+        return Chain(sorted(self._value, key=make_func(key, builtin=True), reverse=reverse))
+
+    def sum(self, start=UNSET):
+        args = (start,) if start is not UNSET else ()
+        return Chain(sum(self._value, *args))
 
     ## heapq
 
