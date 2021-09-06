@@ -4,9 +4,10 @@ from heapq import nlargest, nsmallest
 from random import choice, choices, sample, shuffle
 
 import funcy
+from funcy.funcmakers import make_func, make_pred
 
 from .chain_base import ChainBase
-from .utils import UNSET, make_func
+from .utils import UNSET
 
 MIN_MAX_KEY_ACCEPTS_NONE = sys.version_info >= (3, 8)
 
@@ -172,10 +173,10 @@ class Chain(ChainBase):
         return Chain(funcy.lmap(make_func(f), self._value))
 
     def filter(self, predicate):
-        return Chain(funcy.lfilter(make_func(predicate, test=True), self._value))
+        return Chain(funcy.lfilter(make_pred(predicate), self._value))
 
     def remove(self, predicate):
-        return Chain(funcy.lremove(make_func(predicate, test=True), self._value))
+        return Chain(funcy.lremove(make_pred(predicate), self._value))
 
     def keep(self, f=UNSET):
         if f is UNSET:
