@@ -1,6 +1,7 @@
-import functools
 import sys
+from functools import reduce
 from heapq import nlargest, nsmallest
+from itertools import starmap, zip_longest
 from random import choice, choices, sample, shuffle
 
 import funcy
@@ -26,7 +27,7 @@ class Chain(ChainBase):
         return Chain(min(self._value, key=make_func(key, builtin=MIN_MAX_KEY_ACCEPTS_NONE)))
 
     def reduce(self, f, *initializer):
-        return Chain(functools.reduce(make_func(f, builtin=True), self._value, *initializer))
+        return Chain(reduce(make_func(f, builtin=True), self._value, *initializer))
 
     def reverse(self):
         return Chain(list(reversed(self._value)))
@@ -40,6 +41,25 @@ class Chain(ChainBase):
     def sum(self, start=UNSET):
         args = (start,) if start is not UNSET else ()
         return Chain(sum(self._value, *args))
+
+    if sys.version_info < (3, 10):
+
+        def zip(self):
+            return Chain(list(zip(*self._value)))
+
+    else:
+
+        def zip(self, strict=UNSET):
+            kwargs = dict(strict=strict) if strict is not UNSET else {}
+            return Chain(list(zip(*self._value, **kwargs)))
+
+    ## itertools
+
+    def starmap(self, f):
+        return Chain(list(starmap(f, self._value)))
+
+    def zip_longest(self, fillvalue=None):
+        return Chain(list(zip_longest(*self._value, fillvalue=fillvalue)))
 
     ## heapq
 

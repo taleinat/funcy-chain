@@ -1,3 +1,4 @@
+import sys
 from test.conftest import IterChainWrapper
 
 import pytest
@@ -99,3 +100,23 @@ def test_sum(Chain):
         Chain([[1], [2]]).sum().value
     assert Chain([[1], [2]]).sum([]).value == [1, 2]
     assert Chain([[1], [2]]).sum(start=[]).value == [1, 2]
+
+
+def test_zip(Chain):
+    assert Chain([]).zip().value == []
+    assert Chain([()]).zip().value == []
+    assert Chain([(), ()]).zip().value == []
+    assert Chain([(1,), (3,)]).zip().value == [(1, 3)]
+    assert Chain([(1, 2)]).zip().value == [(1,), (2,)]
+    assert Chain([(1, 2), ()]).zip().value == []
+    assert Chain([(1, 2), (3,)]).zip().value == [(1, 3)]
+    assert Chain([(1,), (3, 4)]).zip().value == [(1, 3)]
+    assert Chain([(1, 2), (3, 4)]).zip().value == [(1, 3), (2, 4)]
+
+    if sys.version_info >= (3, 10):
+        with pytest.raises(ValueError):
+            Chain([(1, 2), ()]).zip(strict=True).value
+        with pytest.raises(ValueError):
+            Chain([(1, 2), (3,)]).zip(strict=True).value
+        with pytest.raises(ValueError):
+            Chain([(1,), (3, 4)]).zip(strict=True).value
