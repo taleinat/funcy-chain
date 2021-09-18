@@ -1,6 +1,3 @@
-from funcy_chain import getter
-
-
 def test_names(Chain):
     data = {
         "user1": {
@@ -20,11 +17,6 @@ def test_names(Chain):
     ).value
     assert names == ["Kennedy, Bob", "Liddle, Alice"]
 
-    names2 = (
-        Chain(data).items().map(getter([1, "lastname"], [1, "firstname"])).sort().map(", ".join)
-    ).value
-    assert names2 == ["Kennedy, Bob", "Liddle, Alice"]
-
 
 def test_integers(Chain):
     assert (
@@ -38,9 +30,9 @@ def test_integers(Chain):
 
 def test_youngest(Chain):
     users = [
-        {"user": "barney", "age": 36},
-        {"user": "fred", "age": 40},
-        {"user": "pebbles", "age": 1},
+        {"username": "barney", "age": 36},
+        {"username": "fred", "age": 40},
+        {"username": "pebbles", "age": 1},
     ]
-    names = (Chain(users).sort(getter("age")).map(getter("user"))).value
+    names = (Chain(users).sort(lambda user: user["age"]).map(lambda user: user["username"])).value
     assert names == ["pebbles", "barney", "fred"]
