@@ -40,6 +40,10 @@ def test_shuffle(Chain):
     assert Chain([]).shuffle().value == []
     assert Chain([1, 2, 3]).shuffle().sort().value == [1, 2, 3]
 
+
+# The "random" argument to random.shuffle() was removed in Python 3.11.
+@pytest.mark.skipif(sys.version_info >= (3, 11), reason="'random' argument remove in Python 3.11")
+def test_shuffle_with_random_argument(Chain):
     # The "random" argument for random.shuffle() is deprecated since Python 3.9.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)

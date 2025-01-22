@@ -1,7 +1,7 @@
 import sys
 from functools import reduce
 from heapq import nlargest, nsmallest
-from itertools import cycle, islice, starmap, zip_longest
+from itertools import islice, starmap, zip_longest
 from random import choice, choices, sample, shuffle
 
 import funcy
@@ -9,8 +9,6 @@ from funcy.funcmakers import make_func, make_pred
 
 from .chain_base import ChainBase
 from .utils import UNSET
-
-MIN_MAX_KEY_ACCEPTS_NONE = sys.version_info >= (3, 8)
 
 
 class IterChain(ChainBase):
@@ -21,13 +19,13 @@ class IterChain(ChainBase):
         return IterChain(enumerate(self._value, start=start))
 
     def max(self, key=None):
-        return IterChain(max(self._value, key=make_func(key, builtin=MIN_MAX_KEY_ACCEPTS_NONE)))
+        return IterChain(max(self._value, key=None if key is None else make_func(key)))
 
     def min(self, key=None):
-        return IterChain(min(self._value, key=make_func(key, builtin=MIN_MAX_KEY_ACCEPTS_NONE)))
+        return IterChain(min(self._value, key=None if key is None else make_func(key)))
 
     def reduce(self, f, *initializer):
-        return IterChain(reduce(make_func(make_func(f), builtin=True), self._value, *initializer))
+        return IterChain(reduce(make_func(make_func(f)), self._value, *initializer))
 
     def reverse(self):
         try:
@@ -40,7 +38,9 @@ class IterChain(ChainBase):
         return IterChain(islice(self._value, *args))
 
     def sort(self, key=None, reverse=False):
-        return IterChain(sorted(self._value, key=make_func(key, builtin=True), reverse=reverse))
+        return IterChain(
+            sorted(self._value, key=None if key is None else make_func(key), reverse=reverse)
+        )
 
     def sum(self, start=UNSET):
         args = (start,) if start is not UNSET else ()
@@ -68,10 +68,10 @@ class IterChain(ChainBase):
     ## heapq
 
     def nlargest(self, n, key=None):
-        return IterChain(nlargest(n, self._value, key=make_func(key, builtin=True)))
+        return IterChain(nlargest(n, self._value, key=None if key is None else make_func(key)))
 
     def nsmallest(self, n, key=None):
-        return IterChain(nsmallest(n, self._value, key=make_func(key, builtin=True)))
+        return IterChain(nsmallest(n, self._value, key=None if key is None else make_func(key)))
 
     ## random
 
@@ -91,11 +91,21 @@ class IterChain(ChainBase):
         def sample(self, k, *, counts=None):
             return IterChain(sample(self._value, k, counts=counts))
 
-    def shuffle(self, random=None):
-        kwargs = dict(random=random) if random is not None else {}
-        value = list(self._value)
-        shuffle(value, **kwargs)
-        return IterChain(value)
+    # The "random" argument to random.shuffle() was removed in Python 3.11.
+    if sys.version_info < (3, 11):
+
+        def shuffle(self, random=None):
+            kwargs = dict(random=random) if random is not None else {}
+            value = list(self._value)
+            shuffle(value, **kwargs)
+            return IterChain(value)
+
+    else:
+
+        def shuffle(self):
+            value = list(self._value)
+            shuffle(value)
+            return IterChain(value)
 
     ## dicts
 
